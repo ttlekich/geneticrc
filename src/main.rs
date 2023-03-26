@@ -1,3 +1,4 @@
+use rand::Rng;
 use std::slice::{Iter, Windows};
 
 use itertools::Itertools;
@@ -24,13 +25,19 @@ fn evaluate<T>(mut population: Vec<T>, fitness_function: &dyn Fn(&T) -> u32, opt
 
 fn crossover<T>(mut population: Vec<T>, opts: Opts)
 where
-    T: Clone,
+    T: Clone + ExactSizeIterator,
 {
-    let new_population = population.into_iter().tuple_windows::<(T, T)>();
+    let a = population
+        .into_iter()
+        .tuple_windows()
+        .reduce(|acc, (p1, p2)| {
+            let crossover_point = rand::thread_rng().gen_range(0..p1.len());
+            (head_1, tail_1) = p1.group_by(|key| key < crossover_point);
+            // (head_2, tail_2) = p2.split_off(crossover_point);
+            // (child_1, child_2) = (head_1 + tail_2, head_2 + tail_1);
+            // acc + child_1 + child_2
+            acc
+        });
 
-    new_population.reduce(|a, b| {
-        let (a, b) = (a.0, b.1);
-        let (a, b) = (a.clone(), b.clone());
-        (a, b)
-    });
+    return;
 }
