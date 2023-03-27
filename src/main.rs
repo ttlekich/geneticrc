@@ -30,7 +30,7 @@ where
     population
         .into_iter()
         .tuple_windows()
-        .fold(&mut Vec::new(), |acc: Vec<Vec<T>>, (p1, p2)| {
+        .fold(vec![vec![]], |acc, (p1, p2)| {
             let crossover_point = rand::thread_rng().gen_range(0..p1.len());
             let (head_1, tail_1) = p1.split_at(crossover_point);
             let (head_2, tail_2) = p2.split_at(crossover_point);
